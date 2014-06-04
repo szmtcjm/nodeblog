@@ -1,6 +1,7 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
-var MongoStore = require('connect-mongo')(express);
+var MongoStore = require('connect-mongo')(session);
 var settings = require('./settings');
 var favicon = require('static-favicon');
 var logger = require('morgan');
@@ -21,7 +22,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.session({
+app.use(session({
     secret: settings.cookieSecret,
     key: settings.db,
     cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
