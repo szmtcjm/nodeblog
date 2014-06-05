@@ -64,25 +64,74 @@ router.post('/reg', function(req, res) {
 });
 
 //登录页面
+router.get('/login', checkLogin);
 router.get('/login', function(req, res) {
-    res.render('login', {title: '登录'});
+    res.render('login', {
+    	title: '登录',
+    	user: req.session.user,
+    	success: req.flash('success').toString(),
+    	error: req.flash('error').toString()
+    });
 });
 
 //登录请求
 router.post('/login', function(req, res) {
+	var md5 = crypto.createHash('md5'),
+		password = md5.update(req.body.password);
+
+	User.get('req.body.name', function(err, user) {
+		if (!user) {
+			req.flash('error', '用户不存在!');
+			return res.redirect('/login');
+		}
+
+		if (user.password !== password) {
+			req.flash('error', '密码错误!');
+			return res.redirect('/login');
+		}
+
+		req.session.user = user;
+		req.flash('success', '登录成功!');
+		res.redrect('/');
+	});
 });
 
 //发表博客页面
 router.get('/post', function(req, res) {
-    res.render('post', {title: '发表'});
+    res.render('post', {
+    	title: '登录',
+    	user: req.session.user,
+    	success: req.flash('success').toString(),
+    	error: req.flash('error').toString()
+    });
 });
 
 //发表博客页面
 router.post('/post', function(req, res) {
 });
 
-//发表博客页面
+//登出
+router.get('/logout', checkNotLogin);
 router.get('/logout', function(req, res) {
+	req.session.user = null;
+	req.flash('success', '登出成功！');
+	res.redirect('/login');
 });
+
+function checkLogin(req, res, next) {
+	if (!req.session.user) {
+		req.flash('error','未登录');
+		res.redirect('/login');
+	}
+	next();
+}
+
+function checkNotLogin(req, res, next) {
+	if (req.session.user) {
+		req.flash('error','已登录');
+		res.redirect('back');
+	}
+	next();
+}
 
 module.exports = router;
