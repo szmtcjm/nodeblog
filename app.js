@@ -3,6 +3,7 @@ var session = require('express-session');
 var path = require('path');
 var MongoStore = require('connect-mongo')(session);
 var settings = require('./settings');
+var flash = require('connect-flash');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -16,6 +17,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(flash());
 
 app.use(favicon());
 app.use(logger('dev'));
