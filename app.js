@@ -17,7 +17,6 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(flash());
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -27,13 +26,12 @@ app.use(cookieParser());
 app.use(session({
     secret: settings.cookieSecret,
     key: settings.db,
-    cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
+    cookie: {maxAge: 1000 * 1},
     store: new MongoStore({db: settings.db})
-}))
+}));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', routes);
-app.use('/users', users);
+app.use(routes);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

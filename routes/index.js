@@ -14,6 +14,7 @@ router.get('/', function(req, res) {
 });
 
 //注册页面
+router.get('/reg', checkNotLogin);
 router.get('/reg', function(req, res) {
     res.render('reg', { 
     	title: '注册',
@@ -25,6 +26,7 @@ router.get('/reg', function(req, res) {
 
 
 //注册请求
+router.post('/reg', checkNotLogin);
 router.post('/reg', function(req, res) {
 	var name = req.body.name,
 		password = req.body.password,
@@ -64,7 +66,7 @@ router.post('/reg', function(req, res) {
 });
 
 //登录页面
-router.get('/login', checkLogin);
+router.get('/login', checkNotLogin);
 router.get('/login', function(req, res) {
     res.render('login', {
     	title: '登录',
@@ -75,16 +77,17 @@ router.get('/login', function(req, res) {
 });
 
 //登录请求
+router.post('/login', checkNotLogin);
 router.post('/login', function(req, res) {
 	var md5 = crypto.createHash('md5'),
-		password = md5.update(req.body.password);
+		password = md5.update(req.body.password).digest('hex');
 
-	User.get('req.body.name', function(err, user) {
+	User.get(req.body.name, function(err, user) {
 		if (!user) {
 			req.flash('error', '用户不存在!');
 			return res.redirect('/login');
 		}
-
+		debugger;
 		if (user.password !== password) {
 			req.flash('error', '密码错误!');
 			return res.redirect('/login');
@@ -92,11 +95,12 @@ router.post('/login', function(req, res) {
 
 		req.session.user = user;
 		req.flash('success', '登录成功!');
-		res.redrect('/');
+		res.redirect('/');
 	});
 });
 
 //发表博客页面
+router.get('/post', checkLogin);
 router.get('/post', function(req, res) {
     res.render('post', {
     	title: '登录',
@@ -107,16 +111,18 @@ router.get('/post', function(req, res) {
 });
 
 //发表博客页面
+router.post('/post', checkLogin);
 router.post('/post', function(req, res) {
 });
 
 //登出
-router.get('/logout', checkNotLogin);
+router.get('/logout', checkLogin);
 router.get('/logout', function(req, res) {
 	req.session.user = null;
 	req.flash('success', '登出成功！');
 	res.redirect('/login');
 });
+
 
 function checkLogin(req, res, next) {
 	if (!req.session.user) {
