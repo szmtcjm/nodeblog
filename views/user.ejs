@@ -3,8 +3,7 @@
 <p>
 	<h2>
 		<a href="/u/<%= post.name %>/<%= post.time.day %>/<%= post.title %>">
-			<%= post.title %>
-		</a>
+		<%= post.title %></a>
 	</h2>
 </p>
 <p class="info">
@@ -12,5 +11,5 @@
 	日期: <%= post.time.minute %>
 </p>
 <p><%- post.post %></p>
-<% }) %>
+<% }); %>
 <%- include footer %>

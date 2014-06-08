@@ -1,18 +1,15 @@
-var express = require('express');
-var session = require('express-session');
-var path = require('path');
-var MongoStore = require('connect-mongo')(session);
-var settings = require('./settings');
-var flash = require('connect-flash');
-var favicon = require('static-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
-var app = express();
+var express = require('express'),
+    session = require('express-session'),
+    path = require('path'),
+    MongoStore = require('connect-mongo')(session),
+    settings = require('./settings'),
+    flash = require('connect-flash'),
+    favicon = require('static-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    routes = require('./routes/index'),
+    app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
