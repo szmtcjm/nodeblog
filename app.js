@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(session({
     secret: settings.cookieSecret,
     key: settings.db,
-    cookie: {maxAge: 1000 * 1},
+    cookie: {maxAge: 1000 * 30 * 24 * 60 * 60},
     store: new MongoStore({db: settings.db})
 }));
 app.use(flash());
