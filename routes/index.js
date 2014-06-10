@@ -353,6 +353,29 @@ router.get('/remove/:name/:day/:title', function(req, res) {
 	});
 });
 
+router.get('/reprint/:name/:day/:title', checkLogin);
+router.get('/reprint/:name/:day/:title', function (req, res) {
+  	Post.edit(req.params.name, req.params.day, req.params.title, function (err, post) {
+  	  	if (err) {
+  	  	  	req.flash('error', err); 
+  	  	  	return res.redirect(back);
+  	  	}
+  	  	var currentUser = req.session.user,
+  	  	    reprint_from = {name: post.name, day: post.time.day, title: post.title},
+  	  	    reprint_to = {name: currentUser.name, head: currentUser.head};
+  	  	Post.reprint(reprint_from, reprint_to, function (err, post) {
+  	  	  	if (err) {
+  	  	  	  	req.flash('error', err); 
+  	  	  	  	return res.redirect('back');
+  	  	  	}
+  	  	  	req.flash('success', '转载成功!');
+  	  	  	var url = '/u/' + post.name + '/' + post.time.day + '/' + post.title;
+  	  	  	//跳转到转载后的文章页面
+  	  	  	res.redirect(url);
+  	  	});
+  	});
+});
+
 function checkLogin(req, res, next) {
 	if (!req.session.user) {
 		req.flash('error','未登录');
