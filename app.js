@@ -22,9 +22,8 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(session({
     secret: settings.cookieSecret,
-    key: settings.db,
     cookie: {maxAge: 1000 * 30 * 24 * 60 * 60},
-    store: new MongoStore({db: settings.db})
+    url: settings.url
 }));
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
